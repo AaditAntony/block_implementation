@@ -5,10 +5,22 @@ abstract class HomeEvent {}
 
 class HomeInitialEvent extends HomeEvent {}
 
-class HomeProductWishListButtonClickEvent extends HomeEvent {}
+class HomeProductWishListButtonClickEvent extends HomeEvent {
+  final ProductDataMode clickedProduct;
 
-class HomeProductCartButtonClickEvent extends HomeEvent {}
+  HomeProductWishListButtonClickEvent({required this.clickedProduct});
+}
+
+class HomeProductCartButtonClickEvent extends HomeEvent {
+  final ProductDataMode clickedProduct;
+
+  HomeProductCartButtonClickEvent({required this.clickedProduct});
+}
 
 class HomeProductWishListButtonNavigateEvent extends HomeEvent {}
 
 class HomeProductCartButtonNavigateEvent extends HomeEvent {}
+
+class HomeProductItemWishListedActionState extends HomeActionState {}
+
+class HomeProductItemCartedActionState extends HomeActionState {}

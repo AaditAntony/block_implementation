@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:learnbloc/feature/cart/bloc/ui/cart.dart';
 import 'package:learnbloc/feature/home/ui/bloc/home_bloc.dart';
+import 'package:learnbloc/feature/home/ui/product_widget_tile.dart';
 import 'package:learnbloc/feature/wishList/bloc/ui/wishList.dart';
 
 class Home extends StatefulWidget {
@@ -38,48 +39,70 @@ class _HomeState extends State<Home> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Wishlist(),
+                builder: (context) => const Wishlist(),
               ));
+        } else if (state is HomeProductItemWishListedActionState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Item WishListed"),
+            ),
+          );
+        } else if (state is HomeProductItemCartedActionState) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Item Carted"),
+            ),
+          );
         }
       },
       builder: (context, state) {
         switch (state.runtimeType) {
           case HomeLoadingState:
-            return Scaffold(
+            return const Scaffold(
               body: Center(
                 child: CircularProgressIndicator(),
               ),
             );
 
           case HomeLoadedSuccessState:
+            final successState = state as HomeLoadedSuccessState;
             return Scaffold(
               appBar: AppBar(
                 backgroundColor: Colors.purple,
                 automaticallyImplyLeading: false,
-                title: Text("MY Grocery App"),
+                title: const Text("MY Grocery App"),
                 actions: [
                   IconButton(
                       onPressed: () {
                         homebloc.add(HomeProductWishListButtonNavigateEvent());
                       },
-                      icon: Icon(Icons.favorite)),
+                      icon: const Icon(Icons.favorite)),
                   IconButton(
                       onPressed: () {
                         homebloc.add(HomeProductCartButtonNavigateEvent());
                       },
-                      icon: Icon(Icons.shopping_bag_outlined))
+                      icon: const Icon(Icons.shopping_bag_outlined))
                 ],
+              ),
+              body: ListView.builder(
+                itemCount: successState.product.length,
+                itemBuilder: (context, index) {
+                  return ProductWidgetTile(
+                    homeBloc: homebloc,
+                    productDataMode: successState.product[index],
+                  );
+                },
               ),
             );
           case HomeErrorState:
-            return Scaffold(
+            return const Scaffold(
               body: Center(
                 child: Text("Error"),
               ),
             );
 
           default:
-            return SizedBox();
+            return const SizedBox();
         }
       },
     );
